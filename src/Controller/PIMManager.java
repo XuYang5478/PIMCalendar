@@ -265,5 +265,6 @@ class PIMManager {
             choice = in.nextLine();
         }
         in.close();
+        System.out.println("Bye~");
     }
 }
