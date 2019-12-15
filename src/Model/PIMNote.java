@@ -31,6 +31,6 @@ public class PIMNote extends PIMEntity {
 
     @Override
     public String toStringToCal() {
-        return null;
+        return this.getOwner().isBlank()?"": this.getOwner()+" - "+  "Note\n" + super.getPriority() + "\n\n" + note;
     }
 }

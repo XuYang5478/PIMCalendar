@@ -22,6 +22,7 @@ public class PIMCalendar extends JPanel {
     private JLabel dateText = new JLabel();
     private PIMCollection<PIMEntity> pimCollection;
     private String temp;
+    private String User;
 
     /**
      * 在构造器中，日历界面的所有组件将会被加载
@@ -29,10 +30,12 @@ public class PIMCalendar extends JPanel {
      * @param PIM    用来加载和保存项目的PIM集合，由上层传递而来
      * @param parent 这个页面的父框架
      */
-    public PIMCalendar(PIMCollection<PIMEntity> PIM, JFrame parent) {
+    public PIMCalendar(PIMCollection<PIMEntity> PIM, JFrame parent, String user) {
         super(new BorderLayout());
         pimCollection = PIM;
         Parent = parent;
+        User=user;
+        calendarPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         this.add(calendarPanel, BorderLayout.CENTER);//这个界面的根布局为边框布局
         DrawCalendar(); //画出日历的函数
 
@@ -54,7 +57,7 @@ public class PIMCalendar extends JPanel {
         //添加PIM项目的按钮
         JButton addPIM = new JButton("﹢");
         addPIM.addActionListener(e -> {
-            new NewItemInCalendar(parent, "Xuyang", pimCollection).setVisible(true);
+            new NewItemInCalendar(parent, User, pimCollection).setVisible(true);
             DrawCalendar();
         });
         toolBar.add(addPIM);
@@ -112,7 +115,7 @@ public class PIMCalendar extends JPanel {
             day.setFont(new Font("微软雅黑", Font.BOLD, 20));
             panel.add(day, BorderLayout.NORTH);//在最上方添加日期号
 
-            Collection<PIMEntity> collection = pimCollection.getItemsForDate(calendar.getTime(), "Xuyang");
+            Collection<PIMEntity> collection = User.isBlank() ? pimCollection.getItemsForDate(calendar.getTime()) : pimCollection.getItemsForDate(calendar.getTime(), User);
             temp = "";
             if (!collection.isEmpty()) {
                 for (PIMEntity pim : collection) {

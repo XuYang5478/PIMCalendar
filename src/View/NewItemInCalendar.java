@@ -74,6 +74,7 @@ public class NewItemInCalendar extends JDialog {
         JPanel con=new JPanel(new FlowLayout());
         con.add(new JLabel("内容：  ",JLabel.RIGHT));
         detail.setLineWrap(true);//可换行
+        detail.setWrapStyleWord(true);
         detail.setMargin(new Insets(5,5,5,5));
         con.add(detail);
         content.add(con);
@@ -123,7 +124,7 @@ public class NewItemInCalendar extends JDialog {
                     appointment.fromString(words);
                     appointment.setPriority(prio);
                     appointment.setPrivate(pri.isSelected());
-                    System.out.println(appointment.toString());
+                    pimCollection.add(appointment);
                     cleanContent();
                     break;
                 case "To-do":
@@ -143,14 +144,14 @@ public class NewItemInCalendar extends JDialog {
             pimCollection.save();
         });
 
-        JButton canel=new JButton("取消");
-        canel.addActionListener(e -> cleanContent());
+        JButton cancel=new JButton("取消");
+        cancel.addActionListener(e -> cleanContent());
 
         ButtonGroup footButton=new ButtonGroup();
         footButton.add(submit);
-        footButton.add(canel);
+        footButton.add(cancel);
         foot.add(submit);
-        foot.add(canel);
+        foot.add(cancel);
         this.add(foot,BorderLayout.SOUTH);
     }
 
