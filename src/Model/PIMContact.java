@@ -36,6 +36,6 @@ public class PIMContact extends PIMEntity {
 
     @Override
     public String toStringToCal() {
-        return first_name + "/" + last_name + "/" + email;
+        return first_name + "/" + last_name + "/" + email + "/" + getPriority();
     }
 }

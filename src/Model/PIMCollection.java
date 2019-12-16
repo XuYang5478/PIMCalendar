@@ -60,6 +60,9 @@ public class PIMCollection<T> extends ArrayList<T> implements Serializable, Remo
     }
 
     public Collection<T> getNotes(String owner) {
+        if(owner.isBlank())
+            return getNotes();
+
         ArrayList<T> notes = new ArrayList<>();
         for (T temp : this) {
             if (temp.getClass().equals(PIMNote.class) && ((PIMNote) temp).getOwner().equals(owner))
@@ -79,6 +82,9 @@ public class PIMCollection<T> extends ArrayList<T> implements Serializable, Remo
     }
 
     public Collection<T> getTodos(String owner){
+        if(owner.isBlank())
+            return getTodos();
+
         ArrayList<T> todos=new ArrayList<>();
         for (T temp : this) {
             if (temp.getClass().equals(PIMTodo.class) && ((PIMTodo) temp).getOwner().equals(owner))
@@ -98,6 +104,9 @@ public class PIMCollection<T> extends ArrayList<T> implements Serializable, Remo
     }
 
     public Collection<T> getAppointments(String owner){
+        if(owner.isBlank())
+            return getAppointments();
+
         ArrayList<T> appointments = new ArrayList<>();
         for (T temp : this) {
             if (temp.getClass().equals(PIMAppointment.class) && ((PIMAppointment) temp).getOwner().equals(owner))
@@ -117,6 +126,9 @@ public class PIMCollection<T> extends ArrayList<T> implements Serializable, Remo
     }
 
     public Collection<T> getContacts(String owner){
+        if(owner.isBlank())
+            return getContacts();
+
         ArrayList<T> contacts = new ArrayList<>();
         for (T temp : this) {
             if (temp.getClass().equals(PIMContact.class) && ((PIMContact) temp).getOwner().equals(owner))
@@ -139,6 +151,9 @@ public class PIMCollection<T> extends ArrayList<T> implements Serializable, Remo
     }
 
     public Collection<T> getItemsForDate(Date d, String owner){
+        if(owner.isBlank())
+            return getItemsForDate(d);
+
         SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd");
         String date = ft.format(d);// 先将输入的日期解析为标准的字符串
 
@@ -161,6 +176,9 @@ public class PIMCollection<T> extends ArrayList<T> implements Serializable, Remo
     }
 
     public Collection<T> getAllByOwner(String owner){
+        if(owner.isBlank())
+            return getAll();
+
         ArrayList<T> pim = new ArrayList<>();
         for (T temp : this) {
             if (((PIMEntity) temp).getOwner().equals(owner))

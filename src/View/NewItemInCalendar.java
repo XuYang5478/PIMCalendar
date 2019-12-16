@@ -7,36 +7,40 @@ import Model.PIMTodo;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 /**
  * 这个类用来向日历中添加新的项目
- *  @author 徐杨 17130110024
- *  @author FG23644666@yeah.net
- * */
+ *
+ * @author 徐杨 17130110024
+ * @author FG23644666@yeah.net
+ */
 public class NewItemInCalendar extends JDialog {
     private PIMCollection<PIMEntity> pimCollection;
     private String User;
 
     //下面是所有需要获取信息的输入组件
-    private JComboBox<String> item =new JComboBox<>(new String[]{"--请选择--", "Appointment", "To-do"});
-    private JTextArea detail=new JTextArea(3,20);
-    private JTextArea date=new JTextArea(1,19);
-    private JTextArea priority=new JTextArea(1,19);
+    private JComboBox<String> item = new JComboBox<>(new String[]{"-- 请选择 --", "Appointment", "To-do"});
+    private JTextArea detail = new JTextArea(3, 20);
+    private JTextArea date = new JTextArea(1, 19);
+    private JTextArea priority = new JTextArea(1, 19);
     private JRadioButton pri;
     private JRadioButton pub;
 
-    private Calendar calendar=Calendar.getInstance();
+    private Calendar calendar = Calendar.getInstance();
 
     /**
      * 在构造器中设置窗口的大小、位置，并加载所有组件
+     *
      * @param parent 父框架，用来定位本窗口
-     * @param user 用户名，用来设置新建项目的属性
-     * @param PIM 用来保存项目的集合
-     * */
+     * @param user   用户名，用来设置新建项目的属性
+     * @param PIM    用来保存项目的集合
+     */
     public NewItemInCalendar(JFrame parent, String user, PIMCollection<PIMEntity> PIM) {
-        super(parent,true);
-        this.setLocation(140,parent.getHeight()-390);
-        User=user;
+        super(parent, true);
+        this.setLocation(120, parent.getHeight() - 390);
+        User = user;
         pimCollection = PIM;
 
         init();
@@ -44,7 +48,7 @@ public class NewItemInCalendar extends JDialog {
 
     /**
      * 这个方法用来加载窗口中的所有组件
-     * */
+     */
     private void init() {
         //属性设置
         this.setTitle("新建日历事项");
@@ -53,72 +57,80 @@ public class NewItemInCalendar extends JDialog {
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-        JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT,20,10));
+        JPanel content = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
 
         //选择项目是todo还是appointment
-        JPanel setitem=new JPanel(new FlowLayout());
+        JPanel setitem = new JPanel(new FlowLayout());
         setitem.add(new JLabel("项目：  ", JLabel.RIGHT));
         setitem.add(item);
         content.add(setitem);
 
         //设置项目的日期
-        JPanel setdate=new JPanel(new FlowLayout());
+        JPanel setdate = new JPanel(new FlowLayout());
         setdate.add(new JLabel("日期：  ", JLabel.RIGHT));
-        date.setMargin(new Insets(5,5,5,5));
-        String pleaseholder=calendar.get(Calendar.YEAR)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.DAY_OF_MONTH);
+        date.setMargin(new Insets(5, 5, 5, 5));
+        String pleaseholder = calendar.get(Calendar.YEAR) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH);
         date.setText(pleaseholder);
         setdate.add(date);
         content.add(setdate);
 
         //输入项目的内容
-        JPanel con=new JPanel(new FlowLayout());
-        con.add(new JLabel("内容：  ",JLabel.RIGHT));
+        JPanel con = new JPanel(new FlowLayout());
+        con.add(new JLabel("内容：  ", JLabel.RIGHT));
         detail.setLineWrap(true);//可换行
         detail.setWrapStyleWord(true);
-        detail.setMargin(new Insets(5,5,5,5));
+        detail.setMargin(new Insets(5, 5, 5, 5));
         con.add(detail);
         content.add(con);
 
         //设置优先级
-        JPanel setprivoity=new JPanel(new FlowLayout());
-        setprivoity.add(new JLabel("优先级：",JLabel.RIGHT));
-        priority.setMargin(new Insets(5,5,5,5));
+        JPanel setprivoity = new JPanel(new FlowLayout());
+        setprivoity.add(new JLabel("优先级：", JLabel.RIGHT));
+        priority.setMargin(new Insets(5, 5, 5, 5));
         setprivoity.add(priority);
         content.add(setprivoity);
 
         //设置权限
-        JPanel setprivate=new JPanel(new FlowLayout());
-        JPanel chooseprivatre=new JPanel(new FlowLayout(FlowLayout.LEFT,30,5));
-        if(User.isBlank()){
-            pri=new JRadioButton("私有");
-            pub=new JRadioButton("公开",true);
-        }else{
-            pri=new JRadioButton("私有",true);
-            pub=new JRadioButton("公开");
+        JPanel setprivate = new JPanel(new FlowLayout());
+        JPanel chooseprivatre = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 5));
+        if (User.isBlank()) {
+            pri = new JRadioButton("私有");
+            pub = new JRadioButton("公开", true);
+        } else {
+            pri = new JRadioButton("私有", true);
+            pub = new JRadioButton("公开");
         }
-        ButtonGroup group=new ButtonGroup();
+        ButtonGroup group = new ButtonGroup();
         group.add(pri);
         group.add(pub);
         chooseprivatre.add(pri);
         chooseprivatre.add(pub);
-        setprivate.add(new JLabel("权限：  ",JLabel.RIGHT));
+        setprivate.add(new JLabel("权限：  ", JLabel.RIGHT));
         setprivate.add(chooseprivatre);
         content.add(setprivate);
 
-        this.add(content,BorderLayout.CENTER);
+        this.add(content, BorderLayout.CENTER);
 
         //窗口底部的“提交”和“取消”按钮，同时为它们设置动作监听器
-        JPanel foot=new JPanel(new FlowLayout(FlowLayout.CENTER,50,5));
-        JButton submit=new JButton("提交");
+        JPanel foot = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 5));
+        JButton submit = new JButton("提交");
         submit.addActionListener(e -> {
-            String type= (String) item.getSelectedItem();
-            String datee=date.getText();
-            String words=detail.getText();
-            String prio=priority.getText();
+            String type = (String) item.getSelectedItem();
+            String datee = date.getText();
+            String words = detail.getText();
+            String prio = priority.getText();
+
+            if (!isRightDate(datee))
+                type = "wrongDate";
+            if (words.isBlank())
+                type = "enptyContent";
+            if (prio.isBlank())
+                prio="common";
+
             assert type != null;
-            switch (type){
+            switch (type) {
                 case "Appointment":
-                    PIMAppointment appointment=new PIMAppointment();
+                    PIMAppointment appointment = new PIMAppointment();
                     appointment.setOwner(User);
                     appointment.setDate(datee);
                     appointment.fromString(words);
@@ -128,7 +140,7 @@ public class NewItemInCalendar extends JDialog {
                     cleanContent();
                     break;
                 case "To-do":
-                    PIMTodo todo=new PIMTodo();
+                    PIMTodo todo = new PIMTodo();
                     todo.setOwner(User);
                     todo.setDate(datee);
                     todo.fromString(words);
@@ -137,36 +149,52 @@ public class NewItemInCalendar extends JDialog {
                     pimCollection.add(todo);
                     cleanContent();
                     break;
+                case "wrongDate":
+                    JOptionPane.showMessageDialog(this, "输入的日期无效，请重新输入！", "日期无效", JOptionPane.ERROR_MESSAGE);
+                    break;
+                case "enptyContent":
+                    JOptionPane.showMessageDialog(this, "内容为空，无法添加！", "添加失败", JOptionPane.ERROR_MESSAGE);
+                    break;
                 default:
-                    JOptionPane.showMessageDialog(this,"请选择代办事项类别！","添加失败",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "请选择代办事项类别！", "添加失败", JOptionPane.ERROR_MESSAGE);
                     break;
             }
             pimCollection.save();
         });
 
-        JButton cancel=new JButton("取消");
+        JButton cancel = new JButton("取消");
         cancel.addActionListener(e -> cleanContent());
 
-        ButtonGroup footButton=new ButtonGroup();
+        ButtonGroup footButton = new ButtonGroup();
         footButton.add(submit);
         footButton.add(cancel);
         foot.add(submit);
         foot.add(cancel);
-        this.add(foot,BorderLayout.SOUTH);
+        this.add(foot, BorderLayout.SOUTH);
     }
 
     /**
      * 这个方法用来初始化所有的输入控件
      * 并关闭新建项目的窗口
-     * */
-    private void cleanContent(){
+     */
+    private void cleanContent() {
         item.setSelectedIndex(0);
         detail.setText("");
-        date.setText(calendar.get(Calendar.YEAR)+"/"+(calendar.get(Calendar.MONTH)+1)+"/"+calendar.get(Calendar.DAY_OF_MONTH));
+        date.setText(calendar.get(Calendar.YEAR) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.DAY_OF_MONTH));
         priority.setText("");
         pri.setSelected(!User.isBlank());
         pub.setSelected(User.isBlank());
 
         this.setVisible(false);
+    }
+
+    private boolean isRightDate(String s) {
+        SimpleDateFormat fm = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            fm.parse(s);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

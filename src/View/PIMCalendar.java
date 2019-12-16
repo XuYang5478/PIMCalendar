@@ -5,8 +5,12 @@ import Model.PIMEntity;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * 这个类显示一个月的日历，
@@ -23,6 +27,9 @@ public class PIMCalendar extends JPanel {
     private PIMCollection<PIMEntity> pimCollection;
     private String temp;
     private String User;
+    private Date currentDate=new Date();
+
+    SimpleDateFormat fm = new SimpleDateFormat("yyyy/MM/dd");
 
     /**
      * 在构造器中，日历界面的所有组件将会被加载
@@ -34,10 +41,10 @@ public class PIMCalendar extends JPanel {
         super(new BorderLayout());
         pimCollection = PIM;
         Parent = parent;
-        User=user;
-        calendarPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        User = user;
+        calendarPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         this.add(calendarPanel, BorderLayout.CENTER);//这个界面的根布局为边框布局
-        DrawCalendar(); //画出日历的函数
+        DrawCalendar(new Date()); //画出日历的函数
 
         //工具栏中翻动日历的按钮
         JButton preMonth = new JButton(" ◀ ");
@@ -50,6 +57,47 @@ public class PIMCalendar extends JPanel {
         toolBar.add(preMonth);
         toolBar.addSeparator();
         toolBar.add(dateText);
+        dateText.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                while (true) {
+                    String dateInput = JOptionPane.showInputDialog(parent, "请输入要跳转到的日期，格式为yyyy/MM/dd.\n为空跳转到今天。", "跳转到", JOptionPane.QUESTION_MESSAGE);
+                    try {
+                        currentDate = fm.parse(dateInput);
+                        count = 0;
+                        DrawCalendar(currentDate);
+                        break;
+                    } catch (Exception ex) {
+                        if(dateInput==null||dateInput.isBlank()){
+                            currentDate=new Date();
+                            DrawCalendar(currentDate);
+                            break;
+                        }
+                        JOptionPane.showMessageDialog(parent, "输入的日期不正确，请重新输入！", "错误", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
         toolBar.addSeparator();
         toolBar.add(nextMonth);
         toolBar.addSeparator();
@@ -58,7 +106,7 @@ public class PIMCalendar extends JPanel {
         JButton addPIM = new JButton("﹢");
         addPIM.addActionListener(e -> {
             new NewItemInCalendar(parent, User, pimCollection).setVisible(true);
-            DrawCalendar();
+            DrawCalendar(currentDate);
         });
         toolBar.add(addPIM);
         this.add(toolBar, BorderLayout.SOUTH);//工具栏默认放在窗口底部，可拖动
@@ -70,7 +118,7 @@ public class PIMCalendar extends JPanel {
      */
     public void PreviousMonth() {
         count--;
-        DrawCalendar();
+        DrawCalendar(currentDate);
     }
 
     /**
@@ -79,16 +127,17 @@ public class PIMCalendar extends JPanel {
      */
     public void NextMonth() {
         count++;
-        DrawCalendar();
+        DrawCalendar(currentDate);
     }
 
     /**
      * 这个方法用来画出日历
      */
-    public void DrawCalendar() {
+    public void DrawCalendar(Date d) {
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(d);
         calendar.add(Calendar.MONTH, count);    //先计算目标日期的日历
-        dateText.setText(calendar.getTime().toString());
+        dateText.setText(" " + fm.format(calendar.getTime()) + " ");
 
         calendarPanel.removeAll();  //删除现有日历上的所有元组，然后重新绘制
 
