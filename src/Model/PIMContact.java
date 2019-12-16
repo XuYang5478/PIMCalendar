@@ -2,7 +2,7 @@ package Model;
 
 /**
  * 设置Contact的类，实现基类和接口中的方法
- * 
+ *
  * @author 徐杨 17130110024
  * @author FG23644666@yeah.net
  */
@@ -31,11 +31,11 @@ public class PIMContact extends PIMEntity {
 
     @Override
     public String toString() {
-        return this.getOwner().isBlank()?"": this.getOwner()+" - "+  "Contact   " + first_name + " " + last_name + "   " + email;
+        return this.getOwner().isBlank() ? "" : this.getOwner() + " - " + "Contact   " + first_name + "   " + last_name + "   " + email;
     }
 
     @Override
     public String toStringToCal() {
-        return null;
+        return first_name + "/" + last_name + "/" + email;
     }
 }

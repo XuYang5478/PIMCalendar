@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.PIMEntity;
+import View.Contact;
 import View.Note;
 import View.PIMCalendar;
 import Model.PIMCollection;
@@ -31,7 +32,7 @@ public class PIMGUI {
         JTabbedPane tabbedPane = new JTabbedPane();//采用卡片式布局
         tabbedPane.add("日历", new PIMCalendar(pimCollection, rootFrame,User));//第一个选项卡中显示日历，可以操作todo和appointment
         tabbedPane.add("笔记", new Note(pimCollection,rootFrame,User));//第二个窗口显示笔记
-        tabbedPane.add("联系人", new JTextArea("Make note here~"));//第三个窗口显示联系人
+        tabbedPane.add("联系人", new Contact(pimCollection,rootFrame,User));//第三个窗口显示联系人
 
         rootFrame.setContentPane(tabbedPane);
         rootFrame.setVisible(true);
