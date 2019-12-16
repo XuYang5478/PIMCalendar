@@ -1,24 +1,26 @@
 package View;
 
 import Model.PIMCollection;
+import Model.PIMContact;
 import Model.PIMEntity;
-import Model.PIMNote;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class addNote extends JDialog {
+public class addContact extends JDialog {
     String User;
     PIMCollection<PIMEntity> pimCollection;
 
-    JTextArea note = new JTextArea(4, 20);
+    JTextArea first = new JTextArea(1, 20);
+    JTextArea last = new JTextArea(1, 20);
+    JTextArea email = new JTextArea(1, 20);
     JTextArea priority = new JTextArea(1, 20);
     JRadioButton pri;
     JRadioButton pub;
 
-    public addNote(JFrame parent, String user, PIMCollection<PIMEntity> PIM) {
+    public addContact(JFrame parent, String user, PIMCollection<PIMEntity> PIM) {
         super(parent, true);
-        this.setLocation(0, parent.getHeight() - 360);
+        this.setLocation(0, parent.getHeight() - 390);
         User = user;
         pimCollection = PIM;
 
@@ -27,47 +29,59 @@ public class addNote extends JDialog {
 
     private void init() {
         //属性设置
-        this.setTitle("新建笔记");
+        this.setTitle("新建联系人");
         this.setLayout(new BorderLayout());
-        this.setSize(330, 320);
+        this.setSize(330, 360);
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
         JPanel content = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(10, 0, 10, 0);
+        constraints.insets = new Insets(10, 10, 10, 10);
 
         constraints.gridx = 0;
         constraints.gridy = 0;
-        content.add(new JLabel("内容：", JLabel.RIGHT), constraints);
+        constraints.gridwidth = 1;
+        content.add(new JLabel("姓：", JLabel.RIGHT), constraints);
 
-        note.setMargin(new Insets(5, 5, 5, 5));
-        note.setLineWrap(true);
-        note.setWrapStyleWord(true);
-        JScrollPane noteScroll = new JScrollPane(note);
         constraints.gridx = 1;
         constraints.gridy = 0;
         constraints.gridwidth = 3;
-        constraints.gridheight = 3;
-        content.add(noteScroll, constraints);
+        content.add(first, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 4;
+        constraints.gridy = 1;
         constraints.gridwidth = 1;
-        constraints.gridheight = 1;
+        content.add(new JLabel("名：", JLabel.RIGHT), constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        constraints.gridwidth = 3;
+        content.add(last, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridwidth = 1;
+        content.add(new JLabel("E-mail：", JLabel.RIGHT), constraints);
+
+        constraints.gridx = 1;
+        constraints.gridy = 2;
+        constraints.gridwidth = 3;
+        content.add(email, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        constraints.gridwidth = 1;
         content.add(new JLabel("优先级：", JLabel.RIGHT), constraints);
 
-        priority.setMargin(new Insets(5, 5, 5, 5));
         constraints.gridx = 1;
-        constraints.gridy = 4;
+        constraints.gridy = 3;
         constraints.gridwidth = 3;
-        constraints.gridheight = 1;
         content.add(priority, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 5;
+        constraints.gridy = 4;
         constraints.gridwidth = 1;
-        constraints.gridheight = 1;
         content.add(new JLabel("权限：", JLabel.RIGHT), constraints);
 
         JPanel setprivatre = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 5));
@@ -85,9 +99,8 @@ public class addNote extends JDialog {
         setprivatre.add(pub);
 
         constraints.gridx = 1;
-        constraints.gridy = 5;
+        constraints.gridy = 4;
         constraints.gridwidth = 3;
-        constraints.gridheight = 1;
         content.add(setprivatre, constraints);
 
         this.add(content, BorderLayout.CENTER);
@@ -96,33 +109,32 @@ public class addNote extends JDialog {
         JPanel foot = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 5));
         JButton submit = new JButton("提交");
         submit.addActionListener(e -> {
-            PIMNote newNote = new PIMNote();
-            String status = "note";
+            PIMContact contact = new PIMContact();
+            String status = "contact";
 
-            if (note.getText().isBlank())
+            if (first.getText().isBlank() && last.getText().isBlank())
                 status = "empty";
 
             switch (status) {
-                case "note":
-                    newNote.setOwner(User);
-                    newNote.fromString(note.getText());
-                    newNote.setPriority(priority.getText().isBlank() ? "common" : priority.getText());
-                    newNote.setPrivate(pri.isSelected());
-                    pimCollection.add(newNote);
+                case "contact":
+                    contact.setOwner(User);
+                    String s = first.getText() + " " + last.getText() + " " + email.getText();
+                    contact.fromString(s);
+                    contact.setPriority(priority.getText().isBlank() ? "common" : priority.getText());
+                    contact.setPrivate(pri.isSelected());
+                    pimCollection.add(contact);
                     pimCollection.save();
                     cleanContent();
                     break;
                 case "empty":
-                    JOptionPane.showMessageDialog(this, "请输入笔记内容！", "添加失败", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "请输入联系人姓名！", "添加失败", JOptionPane.ERROR_MESSAGE);
                     break;
                 default:
                     JOptionPane.showMessageDialog(this, "未知错误……", "添加失败", JOptionPane.ERROR_MESSAGE);
             }
         });
-
         JButton cancel = new JButton("取消");
         cancel.addActionListener(e -> cleanContent());
-
         ButtonGroup footButton = new ButtonGroup();
         footButton.add(submit);
         footButton.add(cancel);
@@ -132,7 +144,9 @@ public class addNote extends JDialog {
     }
 
     private void cleanContent() {
-        note.setText("");
+        first.setText("");
+        last.setText("");
+        email.setText("");
         priority.setText("");
         pri.setSelected(!User.isBlank());
         pub.setSelected(User.isBlank());
